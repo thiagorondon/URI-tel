@@ -52,7 +52,7 @@ removed.  The URI syntax now conforms to RFC 2396 [RFC2396].
 
 =cut
 
-use constant VISUAL_SEPARATORS => '\-\.\(\)';
+our $VISUAL_SEPARATORS = '-.()';
 
 our %syntax = ( 
     'telephone_subscriber'  => '^tel:',
@@ -60,6 +60,23 @@ our %syntax = (
     'extension'             => '.*;ext=',
     'context'               => '.*;phone-context='
 );
+
+=head1 ATTRIBUTES
+
+
+=head2 telephone_uri
+
+
+=head2 isdn_subaddress
+
+
+=head2 extension
+
+
+=head2 context
+
+
+=cut
 
 subtype 'Istel'
     => as 'Str'
@@ -74,6 +91,12 @@ has 'telephone_uri' => (
         $self->$_() for map {'_clear_' . $_ } keys %syntax;
     }
 );
+
+=head1 METHODS
+
+=head2 telephone_subscriber
+
+=cut
 
 for my $field (keys %syntax) {
     has $field => (
@@ -90,8 +113,6 @@ for my $field (keys %syntax) {
     ); 
 }
 
-=head1 FUNCTIONS
-
 =head2 tel_cmp
 
 Compare two numbers, according to RFC 3866:
@@ -104,8 +125,8 @@ Compare two numbers, according to RFC 3866:
 
 sub tel_cmp () {
     my ($self, $number1, $number2) = @_;
-    $number1 =~ s/VISUAL_SEPARATORS//g;
-    $number2 =~ s/VISUAL_SEPARATORS//g;
+    $number1 =~ s/[$VISUAL_SEPARATORS]//g;
+    $number2 =~ s/[$VISUAL_SEPARATORS]//g;
     lc($number1) eq lc($number2);
 }
 
