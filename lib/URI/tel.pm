@@ -52,6 +52,8 @@ removed.  The URI syntax now conforms to RFC 2396 [RFC2396].
 
 =cut
 
+use constant VISUAL_SEPARATORS => '\-\.\(\)';
+
 our %syntax = ( 
     'telephone_subscriber'  => '^tel:',
     'isdn_subaddress'       => '.*;isub=',
@@ -86,6 +88,25 @@ for my $field (keys %syntax) {
             $str;
         }
     ); 
+}
+
+=head1 FUNCTIONS
+
+=head2 tel_cmp
+
+Compare two numbers, according to RFC 3866:
+
+- Both must be either local or global numbers.
+
+- The 'global-number-digits' and the 'local-number-digits' must be equal, after removing all visual separators.
+
+=cut
+
+sub tel_cmp () {
+    my ($self, $number1, $number2) = @_;
+    $number1 =~ s/VISUAL_SEPARATORS//g;
+    $number2 =~ s/VISUAL_SEPARATORS//g;
+    lc($number1) eq lc($number2);
 }
 
 1;
