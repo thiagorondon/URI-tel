@@ -10,6 +10,7 @@ build_requires 'Test::UseAllModules';
 
 requires 'Moose';
 requires 'Moose::Util::TypeConstraints';
+requires 'URI';
 
 auto_install;
 
