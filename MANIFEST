@@ -14,4 +14,5 @@ lib/URI/tel.pm
 Makefile.PL
 t/00-load.t
 t/10-tel.t
+t/20-uri.t
 MANIFEST

@@ -22,6 +22,14 @@ URI::tel - The tel URI for Telephone Numbers (RFC 3966)
     $uri_client->telephone_uri('tel:7042;phone-context=example.com');
     print $uri_client->context, "\n";
 
+    # or
+
+    use URI;
+    use URI::tel;
+
+    my $uri = URI->new('tel:+1-201-555-0123')
+
+
 =head1 DESCRIPTION
 
 The termination point of the "tel" URI telephone number is not
@@ -78,6 +86,19 @@ our %syntax = (
 
 =cut
 
+# The URI package automatically detects URI::* modules installed on a
+# system and will try to use them if the * matches the scheme. The URI
+# package will then called a method called _init on your package and fail.
+# Thanks for Douglas Christopher Wilson
+
+sub _init {
+    my ($class, $uri, $scheme) = @_;
+#    $uri = "$scheme:$uri" unless $uri =~ m{\A $scheme}x;
+    return $class->new(telephone_uri => join(':', 'tel', $uri));
+}
+
+sub _init_implementor() {}
+
 subtype 'Istel'
     => as 'Str'
     => where { $_ =~ /^tel:/ }
@@ -133,6 +154,10 @@ sub tel_cmp () {
 1;
 
 __END__
+
+=head1 CREDITS
+
+Douglas Christopher Wilson
 
 =head1 AUTHOR
 
